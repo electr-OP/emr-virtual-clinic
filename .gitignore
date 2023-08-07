@@ -1,6 +1,6 @@
 /media
 db.sqlite3
-/emr-env
+emr-env
 **/__init__.py
 **/migrations
 .idea
