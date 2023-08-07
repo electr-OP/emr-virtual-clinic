@@ -1,0 +1,32 @@
+<!-- <script src='https://meet.jit.si/external_api.js'></script> -->
+
+
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src='https://8x8.vc/vpaas-magic-cookie-4b875d0742ae456787c812f165d1c07f/external_api.js' async></script>
+    <style>html, body, #jaas-container { height: 100%; }</style>
+    <script type="text/javascript">
+      window.onload = () => {
+        const api = new JitsiMeetExternalAPI("8x8.vc", {
+          roomName: "vpaas-magic-cookie-4b875d0742ae456787c812f165d1c07f/" + "{{ meeting_title }}",
+          parentNode: document.querySelector('#jaas-container'),
+                        // Make sure to include a JWT if you intend to record,
+                        // make outbound calls or use any other premium features!
+                        // jwt: "null"
+        });
+        api.getLivestreamUrl().then(livestreamData => {
+            console.log('skjkajskdl')
+            console.log(livestreamData)
+            console.log(Object.values(livestreamData))
+    // livestreamData = {
+    //     livestreamUrl: 'livestreamUrl'
+    // }
+
+});
+      }
+    </script>
+  </head>
+  <body><div id="jaas-container" /></body>
+</html>
