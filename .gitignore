@@ -4,4 +4,4 @@ emr-env
 **/__init__.py
 **/migrations
 .idea
-**/__pycache__
+__pycache__/
