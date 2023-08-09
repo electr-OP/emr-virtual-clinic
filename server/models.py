@@ -123,6 +123,7 @@ class Account(models.Model):
     ACCOUNT_ADMIN = 30
     ACCOUNT_LAB = 40
     ACCOUNT_CHEMIST = 50
+    ACCOUNT_NURSE = 60
     ACCOUNT_TYPES = (
         (ACCOUNT_UNKNOWN, "Unknown"),
         (ACCOUNT_PATIENT, "Patient"),
@@ -130,12 +131,14 @@ class Account(models.Model):
         (ACCOUNT_ADMIN, "Admin"),
         (ACCOUNT_LAB, "Lab"),
         (ACCOUNT_CHEMIST, "Chemist"),
+        (ACCOUNT_NURSE, "Nurse"),
     )
     EMPLOYEE_TYPES = (
         (ACCOUNT_DOCTOR, "Doctor"),
         (ACCOUNT_ADMIN, "Admin"),
         (ACCOUNT_LAB, "Lab"),
         (ACCOUNT_CHEMIST, "Chemist"),
+        (ACCOUNT_NURSE, "Nurse"),
     )
 
     @staticmethod
@@ -396,3 +399,24 @@ class Statistics(models.Model):
             'endDate':self.endDate,
         }
         return fields
+
+
+class Diagnosis(models.Model):
+    diagnosis_patient = models.ForeignKey(Account, related_name="diagnosis_patient", on_delete=models.CASCADE)
+    condition = models.CharField(max_length=100)
+    diagnosis_date = models.DateTimeField(auto_now_add=True)
+    notes = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return str(self.diagnosis_patient.__str__() + " - " + self.condition)
+
+    def get_populated_fields(self):
+        """To collect form data"""
+        fields = {
+            'diagnosis_patient': self.diagnosis_patient,
+            'diagnosis_date': self.diagnosis_date,
+            'condition': self.condition,
+            'notes': self.notes,
+        }
+        return fields
+

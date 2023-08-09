@@ -24,7 +24,7 @@
                     <td>{{ medicalinfo.bloodType }}</td>
                     <td>{{ medicalinfo.allergy }}</td>
                     <td>
-                        {% if not user.account.role == 20 %}
+                        {% if user.account.role == 20 %}
                             <a class="btn btn-warning btn-sm" href="/medicalinfo/update/?pk={{ medicalinfo.pk }}" role="button">Update</a>
                         {% endif %}
                     </td>

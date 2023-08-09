@@ -81,6 +81,8 @@
                                         <a class="btn center-block btn-success btn-sm" href="/appointment/start/" role="button">Join</a>
                                     {% elif appointment.status == "Active" and appointment.endTime > current_datetime and appointment.startTime > current_datetime %}
                                         <a class="btn center-block btn-warning btn-sm disabled" role="button">Waiting...</a>
+                                        {% elif appointment.appointment_type == 'Offline' %}
+{#                                        <a class="btn center-block btn-warning btn-sm disabled" role="button"></a>#}
                                     {% else %}
                                         <a class="btn center-block btn-danger btn-sm disabled" role="button">Expired</a>
                                     {% endif %}

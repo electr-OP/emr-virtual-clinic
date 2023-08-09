@@ -4,7 +4,8 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 
-from server.models import Account, Profile, Hospital, MedicalInfo, MedicalTest, IND_STATES, Appointment, Message, Speciality, APPOINTMENT_TYPE, Symptom
+from server.models import Account, Profile, Hospital, MedicalInfo, MedicalTest, IND_STATES, Appointment, Message, \
+    Speciality, APPOINTMENT_TYPE, Symptom, Diagnosis
 
 
 def validate_username_available(username):
@@ -466,3 +467,24 @@ class StatisticsForm(BasicForm):
     def assign(self,statistics):
         statistics.startTime = self.cleaned_data['startDate']
         statistics.endTime = self.cleaned_data['endDate']
+
+
+class DiagnosisForm(BasicForm):
+    diagnosis_patient = forms.ModelChoiceField( label="Patient", queryset=Account.objects.filter(role=Account.ACCOUNT_PATIENT))
+    setup_field(diagnosis_patient)
+    condition = forms.CharField(max_length=100)
+    setup_field(condition,"Enter condition here")
+    notes = forms.CharField(max_length=100)
+    setup_field(notes, "Enter Notes here")
+
+    def assign(self,medtest):
+        medtest.diagnosis_patient = self.cleaned_data['diagnosis_patient']
+        medtest.condition = self.cleaned_data['condition']
+        medtest.notes = self.cleaned_data['notes']
+
+    def generate(self):
+        return Diagnosis(
+            diagnosis_patient = self.cleaned_data['diagnosis_patient'],
+            condition = self.cleaned_data['condition'],
+            notes = self.cleaned_data['notes'],
+        )

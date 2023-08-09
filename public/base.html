@@ -85,12 +85,12 @@
                             <li class="{% block sidebar_medtest %}{% endblock %}"><a href="/medtest/list">Medical Tests<i class="pull-right fa fa-flask"></i></a></li>
                         {% endif %}
                         {% if user.account.role == 10 or user.account.role == 20 or user.account.role == 50 %}
+                            <li class="{% block sidebar_diagnosis %}{% endblock %}"><a href="/diagnosis/list">Diagnosis<i class="pull-right fa fa-stethoscope"></i></a></li>
                             <li class="{% block sidebar_prescription %}{% endblock %}"><a href="/prescription/list/">Prescriptions<i class="pull-right fa fa-file-text"></i></a></li>
                         {% endif %}
                         {% if user.account.role == 30 %}
                             <li class="{% block sidebar_admin_symptom %}{% endblock %}"><a href="/admin/symptom/">Manage Symptom<i class="pull-right fa fa-hospital-o"></i></a></li>
                             <li class="{% block sidebar_admin_speciality %}{% endblock %}"><a href="/admin/speciality/">Manage Speciality<i class="pull-right fa fa-stethoscope"></i></a></li>
-{#                            <li class="{% block sidebar_admin_speciality %}{% endblock %}"><a href="/admin/speciality/">Manage Hospitals<i class="pull-right fa fa-stethoscope"></i></a></li>#}
                             <li class="{% block sidebar_admin_users %}{% endblock %}"><a href="/admin/users/">Manage Users<i class="pull-right fa fa-users"></i></a></li>
                             <li class="{% block sidebar_admin_activity %}{% endblock %}"><a href="/admin/activity/">View Activity<i class="pull-right fa fa-eye"></i></a></li>
                             <li class="{% block sidebar_admin_statistics %}{% endblock %}"><a href="/admin/statistics/">View Statistics<i class="pull-right fa fa-bar-chart"></i></a></li>
