@@ -13,7 +13,7 @@ from server import views_admin
 from server import views_message
 from server import views_api
 from .views import GeneratePdf
-from  server import diagnosis
+from  server import diagnosis, views_employees, views_icd
 
 app_name = 'server'
 
@@ -65,6 +65,14 @@ urlpatterns = [
     url(r'^diagnosis/list/$', diagnosis.list_view_diagnosis, name='diagnosis/list'),
     url(r'^diagnosis/create/$', diagnosis.create_view, name='diagnosis/create'),
     url(r'^diagnosis/update/$', diagnosis.update_view, name='diagnosis/update'),
+
+    url(r'^icd/search/', views_icd.get_entity_search, name='icd/search'),
+    url(r'^icd/search_view/', views_icd.search_view, name='icd/search_view'),
+    url(r'^icd/view_entity/$', views_icd.view_entity, name='icd/view_entity'),
+
+    url(r'^employee/list/$', views_employees.list_view, name='employee/list'),
+    url(r'^employee/create/$', views_employees.create_view, name='employee/create'),
+    url(r'^employee/update/$', views_employees.update_view, name='employee/update'),
 
     url(r'^prescription/create/$', views_prescription.create_view, name='prescription/create'),
     url(r'^prescription/list/$', views_prescription.list_view, name='prescription/list'),

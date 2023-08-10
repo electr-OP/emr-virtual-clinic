@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% load app_filters %}
+{% block title %} ICD Search{% endblock %}
+{% block sidebar_icd %}active{% endblock %}
+{% block body_header %}
+    ICD Search
+    {#    <br>#}
+    {#    <a class="btn btn-success btn-sm" href="/employee/create" role="button">Add Employee</a>#}
+{% endblock %}
+{% block body %}
+
+    <form action="{% url 'server:icd/search_view' %}" method="POST">
+{#    <input type="text" name="q" placeholder="Search...">#}
+{#    <button type="submit">Search</button>#}
+    {% csrf_token %}
+    <div class="" style="padding-bottom: 40px">
+        <h1>Search</h1>
+        <div class="search-box">
+            <input class="form-control" name="q" type="text" id="searchInput" placeholder="Enter your search...">
+            <br>
+            <button class="btn btn-success btn-lg" type="submit" id="searchButton">Search</button>
+        </div>
+
+    </div>
+    </form>
+    <table id="datatable" class="table table-hover table-striped table-bordered">
+        <thead>
+        <th>ID</th>
+        <th>Title</th>
+        <th>StemId</th>
+        <th>score</th>
+{#        <th>Address</th>#}
+{#        <th>Employment Status</th>#}
+        <th data-dafultsort="disabled">Options</th>
+        </thead>
+        <tbody>
+        {% for data in query %}
+
+            <tr>
+                <td>{{ data.id }}</td>
+                <td>{{ data.title }} </td>
+                <td>{{ data.stemId }}</td>
+                <td>{{ data.score }}</td>
+{#                <td>{{ data.address }}</td>#}
+                <td>
+                    {% if user.account.role == 30 %}
+                        <a class="btn btn-warning btn-sm" href="/icd/view_entity?pk={{ data.id }}"
+                           role="button">View</a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+    <script src="script.js"></script>
+    {% include "virtualclinic/admin/symptom_modal.html" %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#datatable').DataTable();
+        });
+
+        function configureModal(pk, name) {
+            document.getElementById('symptom-modal-body').innerHTML = 'Are you sure you want to delete the symptom '.concat(name, '?');
+            document.getElementById('symptom-modal-hidden').value = pk;
+        }
+        {##}
+        {#function getCookie(name) {#}
+        {#    let cookieValue = null;#}
+        {#    if (document.cookie && document.cookie !== '') {#}
+        {#        const cookies = document.cookie.split(';');#}
+        {#        for (let i = 0; i < cookies.length; i++) {#}
+        {#            const cookie = cookies[i].trim();#}
+        {#            if (cookie.substring(0, name.length + 1) === (name + '=')) {#}
+        {#                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));#}
+        {#                break;#}
+        {#            }#}
+        {#        }#}
+        {#    }#}
+        {#    return cookieValue;#}
+        {##}
+        {##}
+        {#document.addEventListener("DOMContentLoaded", function () {#}
+        {#    const searchButton = document.getElementById("searchButton");#}
+        {#    const searchInput = document.getElementById("searchInput");#}
+        {#    const searchResults = document.getElementById("searchResults");#}
+        {##}
+        {#    searchButton.addEventListener("click", function () {#}
+        {#        const query = searchInput.value;#}
+        {#        const csrftoken = getCookie('csrftoken');#}
+        {##}
+        {#        // Create the payload object#}
+        {#        const payload = {#}
+        {#            q: query,#}
+        {#            otherParam: "value"#}
+        {#            // Add more payload parameters as needed#}
+        {#        };#}
+        {##}
+        {#        // Replace with your API endpoint URL#}
+        {#        const apiUrl = "http://127.0.0.1:8000/icd/search/";#}
+        {##}
+        {#        fetch(apiUrl, {#}
+        {#            method: "GET",#}
+        {#            headers: {#}
+        {#                "Content-Type": "application/json",#}
+        {#                'X-CSRFToken': csrftoken,#}
+        {#                // Add any additional headers as needed#}
+        {#            },#}
+        {#            // Convert the payload to a JSON string and include it in the request body#}
+        {#            body: JSON.stringify(payload),#}
+        {#        })#}
+        {#            .then(response => response.json())#}
+        {#            .then(data => console.log(data))#}
+        {#            .catch(error => console.error("Error:", error));#}
+        {#    });#}
+        {##}
+        {##}
+
+
+    </script>
+{% endblock %}

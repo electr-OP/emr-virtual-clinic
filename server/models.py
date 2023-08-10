@@ -170,12 +170,33 @@ class Account(models.Model):
     profile = models.OneToOneField(Profile, on_delete=models.CASCADE)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     archive = models.BooleanField(default=False)
+    address = models.TextField(blank=True, null=True)
+    employment_status = models.PositiveIntegerField(choices=[(1, 'Active'), (2, 'Pending'), (3, 'Deactivated')], default=1)
+    marital_status = models.CharField(max_length=30, blank=True, null=True)
+    emergency_contact_name = models.CharField(max_length=100, blank=True, null=True)
+    emergency_contact_phone = models.CharField(max_length=20, blank=True, null=True)
+    emergency_contact_email = models.EmailField(blank=True, null=True)
+    emergency_contact_address = models.TextField(blank=True, null=True)
 
     def __str__(self):
         if self.role == 20:
             return "Dr. " + self.profile.__str__()
         else:
             return self.profile.__str__()
+
+    def get_populated_fields(self):
+        """To collect form data"""
+        fields = {
+            'role': self.role,
+            'address': self.address,
+            'employment_status': self.employment_status,
+            'marital_status': self.marital_status,
+            'emergency_contact_name': self.emergency_contact_name,
+            'emergency_contact_phone': self.emergency_contact_phone,
+            'emergency_contact_email': self.emergency_contact_email,
+            'emergency_contact_address': self.emergency_contact_address,
+        }
+        return fields
 
     class Admin:
         list_display = (
@@ -420,3 +441,36 @@ class Diagnosis(models.Model):
         }
         return fields
 
+
+"""
+HRM Models 
+"""
+
+
+# class LeaveRequest(models.Model):
+#     employee = models.ForeignKey(Account, on_delete=models.CASCADE)
+#     start_date = models.DateField()
+#     end_date = models.DateField()
+#     status = models.CharField(max_length=20, choices=[('pending', 'Pending'), ('approved', 'Approved'), ('rejected', 'Rejected')])
+#     # Other fields: reason, type of leave, etc.
+#
+#
+# class Payroll(models.Model):
+#     employee = models.ForeignKey(Account, on_delete=models.CASCADE)
+#     salary = models.DecimalField(max_digits=10, decimal_places=2)
+#     pay_date = models.DateField()
+#     # Other fields: deductions, bonuses, etc.
+#
+#
+# class PerformanceReview(models.Model):
+#     employee = models.ForeignKey(Account, on_delete=models.CASCADE)
+#     reviewer = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='reviews_given')
+#     review_date = models.DateField()
+#     feedback = models.TextField()
+#     rating = models.PositiveIntegerField(choices=[(1, 'Poor'), (2, 'Average'), (3, 'Good'), (4, 'Excellent'), (5, 'Outstanding')])
+#
+#
+# class Attendance(models.Model):
+#     employee = models.ForeignKey(Account, on_delete=models.CASCADE)
+#     date = models.DateField()
+#     status = models.CharField(max_length=20, choices=[('present', 'Present'), ('absent', 'Absent')])

@@ -488,3 +488,45 @@ class DiagnosisForm(BasicForm):
             condition = self.cleaned_data['condition'],
             notes = self.cleaned_data['notes'],
         )
+
+
+class AccountForm(BasicForm):
+    # diagnosis_patient = forms.ModelChoiceField( label="Patient", queryset=Account.objects.exclude(role=Account.ACCOUNT_PATIENT))
+    # setup_field(diagnosis_patient)
+    CHOICES = (
+        (1, 'Active'), (2, 'Pending'), (3, 'Deactivated')
+    )
+    address = forms.CharField(max_length=100, required=False)
+    setup_field(address,"Enter condition here")
+    employment_status = forms.ChoiceField(required=False, choices=CHOICES)
+    setup_field(employment_status, "Select Employment Status here")
+    marital_status = forms.CharField(max_length=100, required=False)
+    setup_field(marital_status,"Enter marital status here")
+    emergency_contact_name = forms.CharField(max_length=100, required=False)
+    setup_field(emergency_contact_name, "Enter emergency contact name here")
+    emergency_contact_phone = forms.CharField(max_length=100, required=False)
+    setup_field(emergency_contact_phone, "Enter emergency contact phone here")
+    emergency_contact_email = forms.CharField(max_length=100, required=False)
+    setup_field(emergency_contact_email,"Enter emergency contact email here")
+    emergency_contact_address = forms.CharField(max_length=100, required=False)
+    setup_field(emergency_contact_address, "Enter emergency contact address here")
+
+    def assign(self,medtest):
+        medtest.address = self.cleaned_data['address']
+        medtest.employment_status = self.cleaned_data['employment_status']
+        medtest.marital_status = self.cleaned_data['marital_status']
+        medtest.emergency_contact_name = self.cleaned_data['emergency_contact_name']
+        medtest.emergency_contact_phone = self.cleaned_data['emergency_contact_phone']
+        medtest.emergency_contact_email = self.cleaned_data['emergency_contact_email']
+        medtest.emergency_contact_address = self.cleaned_data['emergency_contact_address']
+
+    def generate(self):
+        return AccountForm(
+            address = self.cleaned_data['address'],
+            employment_status = self.cleaned_data['employment_status'],
+            marital_status = self.cleaned_data['marital_status'],
+            emergency_contact_name = self.cleaned_data['emergency_contact_name'],
+            emergency_contact_phone = self.cleaned_data['emergency_contact_phone'],
+            emergency_contact_email = self.cleaned_data['emergency_contact_email'],
+            emergency_contact_address = self.cleaned_data['emergency_contact_address']
+        )

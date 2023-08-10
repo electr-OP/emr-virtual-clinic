@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load app_filters %}
+{% block title %}
+    Add Employee
+{% endblock %}
+{% block sidebar_admin_employee %}
+    active
+{% endblock %}
+{% block body_header %}
+    Add Employee
+{% endblock %}
+{% block body %}
+    <p class="lead">Fill out this Employee's form and click '{{ form_button }}' when finished.</p>
+    {% include "singleform.html" %}
+{% endblock %}
