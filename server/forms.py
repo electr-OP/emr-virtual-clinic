@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 
 from server.models import Account, Profile, Hospital, MedicalInfo, MedicalTest, IND_STATES, Appointment, Message, \
-    Speciality, APPOINTMENT_TYPE, Symptom, Diagnosis
+    Speciality, APPOINTMENT_TYPE, Symptom, Diagnosis, LeaveRequest, Payroll, PerformanceReview
 
 
 def validate_username_available(username):
@@ -521,7 +521,7 @@ class AccountForm(BasicForm):
         medtest.emergency_contact_address = self.cleaned_data['emergency_contact_address']
 
     def generate(self):
-        return AccountForm(
+        return Account(
             address = self.cleaned_data['address'],
             employment_status = self.cleaned_data['employment_status'],
             marital_status = self.cleaned_data['marital_status'],
@@ -529,4 +529,134 @@ class AccountForm(BasicForm):
             emergency_contact_phone = self.cleaned_data['emergency_contact_phone'],
             emergency_contact_email = self.cleaned_data['emergency_contact_email'],
             emergency_contact_address = self.cleaned_data['emergency_contact_address']
+        )
+
+
+class LeaveRequestForm(BasicForm):
+    # diagnosis_patient = forms.ModelChoiceField( label="Patient", queryset=Account.objects.exclude(role=Account.ACCOUNT_PATIENT))
+    # setup_field(diagnosis_patient)
+    LEAVE_CHOICES = (
+        (1, "Annual Leave/Vacation Leave"),
+        (2, "Sick Leave"),
+        (3, "Maternity Leave"),
+        (4, "Paternity Leave"),
+        (5, "Parental Leave"),
+        (6, "Bereavement Leave"),
+        (7, "Personal Leave"),
+        (8, "Compensatory Leave"),
+        (9, "Public Holidays"),
+        (10, "Special Leave"),
+        (11, "Sabbatical Leave"),
+        (12, "Unpaid Leave"),
+        (13, "Family and Medical Leave Act (FMLA) Leave")
+    )
+    STATUS = (
+        ('pending', 'Pending'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected')
+    )
+
+    employee = forms.ModelChoiceField(required=True,label="Employee", queryset=Account.objects.exclude(role=Account.ACCOUNT_PATIENT))
+    setup_field(employee,"Choose Employee")
+    start_date = forms.DateField(required=True)
+    setup_field(start_date)
+    end_date = forms.DateField(required=True)
+    setup_field(end_date,"Enter marital status here")
+    reason = forms.CharField(required=True)
+    setup_field(reason, "Enter Reason For Leave")
+    type_of_leave = forms.ChoiceField(choices=LEAVE_CHOICES, required=True)
+    setup_field(type_of_leave, "Enter emergency contact phone here")
+    # status = forms.ChoiceField(choices=STATUS, disabled=True, required=False)
+    # setup_field(status)
+
+    def assign(self,medtest):
+        medtest.employee = self.cleaned_data['employee']
+        medtest.start_date = self.cleaned_data['start_date']
+        medtest.end_date = self.cleaned_data['end_date']
+        medtest.reason = self.cleaned_data['reason']
+        medtest.type_of_leave = self.cleaned_data['type_of_leave']
+        # medtest.status = self.cleaned_data['status']
+
+    def generate(self):
+        return LeaveRequest(
+            employee = self.cleaned_data['employee'],
+            start_date = self.cleaned_data['start_date'],
+            end_date = self.cleaned_data['end_date'],
+            reason = self.cleaned_data['reason'],
+            type_of_leave = self.cleaned_data['type_of_leave'],
+            # status = self.cleaned_data['status'],
+        )
+
+
+class PayRollForm(BasicForm):
+    # diagnosis_patient = forms.ModelChoiceField( label="Patient", queryset=Account.objects.exclude(role=Account.ACCOUNT_PATIENT))
+    # setup_field(diagnosis_patient)
+    PAY_CHOICES = [
+        (1, "Monthly"),
+        (2, "Bi-Weekly"),
+        (3, "Weekly"),
+        (4, "Semi-Monthly"),
+        (5, "Hourly Wage"),
+        (6, "Commission"),
+        (7, "Contract/Project-Based"),
+        (8, "Annual"),
+    ]
+
+    employee = forms.ModelChoiceField(required=True,label="Employee", queryset=Account.objects.exclude(role=Account.ACCOUNT_PATIENT))
+    setup_field(employee,"Choose Employee")
+    salary = forms.DecimalField(required=True)
+    setup_field(salary)
+    pay_type = forms.ChoiceField(required=True, choices=PAY_CHOICES)
+    setup_field(pay_type,"Enter marital status here")
+
+    def assign(self,medtest):
+        medtest.employee = self.cleaned_data['employee']
+        medtest.salary = self.cleaned_data['salary']
+        medtest.pay_type = self.cleaned_data['pay_type']
+        # medtest.status = self.cleaned_data['status']
+
+    def generate(self):
+        return Payroll(
+            employee = self.cleaned_data['employee'],
+            salary = self.cleaned_data['salary'],
+            pay_type = self.cleaned_data['pay_type'],
+        )
+
+
+class PerformanceReviewForm(BasicForm):
+    RATING_CHOICES = (
+        (1, 'Poor'),
+        (2, 'Average'),
+        (3, 'Good'),
+        (4, 'Excellent'),
+        (5, 'Outstanding')
+    )
+
+    employee = forms.ModelChoiceField(required=True,label="Employee", queryset=Account.objects.exclude(role=Account.ACCOUNT_PATIENT))
+    setup_field(employee,"Choose Employee")
+    reviewer = forms.ModelChoiceField(required=True, label="Reviewer", queryset=Account.objects.filter(role=Account.ACCOUNT_ADMIN))
+    setup_field(reviewer)
+    review_date = forms.DateField(required=True)
+    setup_field(review_date,"Enter marital status here")
+    feedback = forms.CharField(required=True)
+    setup_field(feedback, "Enter Reason For Leave")
+    rating = forms.ChoiceField(choices=RATING_CHOICES, required=True)
+    setup_field(rating, "Enter emergency contact phone here")
+    # status = forms.ChoiceField(choices=STATUS, disabled=True, required=False)
+    # setup_field(status)
+
+    def assign(self,medtest):
+        medtest.employee = self.cleaned_data['employee']
+        medtest.reviewer = self.cleaned_data['reviewer']
+        medtest.review_date = self.cleaned_data['review_date']
+        medtest.feedback = self.cleaned_data['feedback']
+        medtest.rating = self.cleaned_data['rating']
+
+    def generate(self):
+        return PerformanceReview(
+            employee = self.cleaned_data['employee'],
+            reviewer = self.cleaned_data['reviewer'],
+            review_date = self.cleaned_data['review_date'],
+            feedback = self.cleaned_data['feedback'],
+            rating = self.cleaned_data['rating'],
         )

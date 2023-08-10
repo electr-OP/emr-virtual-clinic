@@ -1,5 +1,6 @@
 from django.contrib import admin
-from server.models import Location, Hospital , Account, Profile, Action, Appointment, MedicalTest, Diagnosis
+from server.models import Location, Hospital, Account, Profile, Action, Appointment, MedicalTest, Diagnosis, \
+    LeaveRequest
 
 
 class LocationAdmin(admin.ModelAdmin):
@@ -93,3 +94,4 @@ class MedicalTestAdmin(admin.ModelAdmin):
 
 admin.site.register(MedicalTest, MedicalTestAdmin)
 admin.site.register(Diagnosis)
+admin.site.register(LeaveRequest)

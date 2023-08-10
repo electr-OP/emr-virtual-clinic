@@ -1,5 +1,6 @@
 from datetime import date
 
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -447,29 +448,89 @@ HRM Models
 """
 
 
-# class LeaveRequest(models.Model):
-#     employee = models.ForeignKey(Account, on_delete=models.CASCADE)
-#     start_date = models.DateField()
-#     end_date = models.DateField()
-#     status = models.CharField(max_length=20, choices=[('pending', 'Pending'), ('approved', 'Approved'), ('rejected', 'Rejected')])
-#     # Other fields: reason, type of leave, etc.
-#
-#
-# class Payroll(models.Model):
-#     employee = models.ForeignKey(Account, on_delete=models.CASCADE)
-#     salary = models.DecimalField(max_digits=10, decimal_places=2)
-#     pay_date = models.DateField()
-#     # Other fields: deductions, bonuses, etc.
-#
-#
-# class PerformanceReview(models.Model):
-#     employee = models.ForeignKey(Account, on_delete=models.CASCADE)
-#     reviewer = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='reviews_given')
-#     review_date = models.DateField()
-#     feedback = models.TextField()
-#     rating = models.PositiveIntegerField(choices=[(1, 'Poor'), (2, 'Average'), (3, 'Good'), (4, 'Excellent'), (5, 'Outstanding')])
-#
-#
+class LeaveRequest(models.Model):
+    LEAVE_CHOICES = [
+        (1,"Annual Leave/Vacation Leave"),
+        (2,"Sick Leave"),
+        (3,"Maternity Leave"),
+        (4,"Paternity Leave"),
+        (5,"Parental Leave"),
+        (6,"Bereavement Leave"),
+        (7,"Personal Leave"),
+        (8,"Compensatory Leave"),
+        (9,"Public Holidays"),
+        (10,"Special Leave"),
+        (11,"Sabbatical Leave"),
+        (12,"Unpaid Leave"),
+        (13,"Family and Medical Leave Act (FMLA) Leave")
+    ]
+
+    employee = models.ForeignKey(Account, on_delete=models.CASCADE)
+    start_date = models.DateField()
+    end_date = models.DateField()
+    reason = models.TextField()
+    type_of_leave = models.PositiveIntegerField(default=5, choices=LEAVE_CHOICES)
+    status = models.CharField(max_length=20, default='pending', choices=[('pending', 'Pending'), ('approved', 'Approved'), ('rejected', 'Rejected')])
+
+    def get_populated_fields(self):
+        """To collect form data"""
+        fields = {
+            'employee': self.employee,
+            'start_date': self.start_date,
+            'end_date': self.end_date,
+            'reason': self.reason,
+            'type_of_leave': self.type_of_leave,
+            'status': self.status,
+        }
+        return fields
+
+    def clean(self):
+        if self.start_date > self.end_date:
+            return True
+
+
+class Payroll(models.Model):
+    PAY_CHOICES = [
+        (1, "Monthly"),
+        (2, "Bi-Weekly"),
+        (3, "Weekly"),
+        (4, "Semi-Monthly"),
+        (5, "Hourly Wage"),
+        (6, "Commission"),
+        (7, "Contract/Project-Based"),
+        (8, "Annual"),
+    ]
+    employee = models.ForeignKey(Account, on_delete=models.CASCADE)
+    salary = models.DecimalField(max_digits=10, decimal_places=2)
+    pay_type = models.PositiveIntegerField(default=1, choices=PAY_CHOICES)
+
+    def get_populated_fields(self):
+        """To collect form data"""
+        fields = {
+            'employee': self.employee,
+            'salary': self.start_date,
+            'pay_type': self.end_date,
+        }
+        return fields
+
+
+class PerformanceReview(models.Model):
+    employee = models.ForeignKey(Account, on_delete=models.CASCADE)
+    reviewer = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='reviews_given')
+    review_date = models.DateField()
+    feedback = models.TextField()
+    rating = models.PositiveIntegerField(choices=[(1, 'Poor'), (2, 'Average'), (3, 'Good'), (4, 'Excellent'), (5, 'Outstanding')])
+
+    def get_populated_fields(self):
+        """To collect form data"""
+        fields = {
+            'employee': self.employee,
+            'reviewer': self.start_date,
+            'review_date': self.end_date,
+            'feedback': self.end_date,
+            'rating': self.end_date,
+        }
+        return fields
 # class Attendance(models.Model):
 #     employee = models.ForeignKey(Account, on_delete=models.CASCADE)
 #     date = models.DateField()

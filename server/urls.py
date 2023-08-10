@@ -2,7 +2,7 @@ from django.conf.urls import url
 from django.conf.urls.static import static
 from django.conf import settings
 
-from server import views
+from server import views, views_payroll
 from server import views_home
 from server import views_profile
 from server import views_prescription
@@ -13,7 +13,7 @@ from server import views_admin
 from server import views_message
 from server import views_api
 from .views import GeneratePdf
-from  server import diagnosis, views_employees, views_icd
+from  server import diagnosis, views_employees, views_icd, views_leaverequest, views_performance
 
 app_name = 'server'
 
@@ -69,6 +69,19 @@ urlpatterns = [
     url(r'^icd/search/', views_icd.get_entity_search, name='icd/search'),
     url(r'^icd/search_view/', views_icd.search_view, name='icd/search_view'),
     url(r'^icd/view_entity/$', views_icd.view_entity, name='icd/view_entity'),
+
+
+    url(r'^leaverequest/list/$', views_leaverequest.list_view, name='leaverequest/list'),
+    url(r'^leaverequest/create/$', views_leaverequest.create_view, name='leaverequest/create'),
+    url(r'^leaverequest/update/$', views_leaverequest.update_view, name='leaverequest/update'),
+
+    url(r'^performancereview/list/$', views_performance.list_view, name='performancereview/list'),
+    url(r'^performancereview/create/$', views_performance.create_view, name='performancereview/create'),
+    url(r'^performancereview/update/$', views_performance.update_view, name='performancereview/update'),
+
+    url(r'^payroll/list/$', views_payroll.list_view, name='payroll/list'),
+    url(r'^payroll/create/$', views_payroll.create_view, name='payroll/create'),
+    url(r'^payroll/update/$', views_payroll.update_view, name='payroll/update'),
 
     url(r'^employee/list/$', views_employees.list_view, name='employee/list'),
     url(r'^employee/create/$', views_employees.create_view, name='employee/create'),

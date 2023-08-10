@@ -1,10 +1,52 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% load app_filters %}
+{% block title %}Performance Review{% endblock %}
+{% block sidebar_admin_performancereview %}active{% endblock %}
+{% block body_header %}
+    Performance Review
+    <br>
+    <a class="btn btn-success btn-sm" href="/performancereview/create" role="button">Add Performance Review</a>
+{% endblock %}
+{% block body %}
+    <table id="datatable" class="table table-hover table-striped table-bordered">
+        <thead>
+            <th>employee</th>
+            <th>start_date</th>
+            <th>end_date Date</th>
+            <th>type_of_leave</th>
+            <th>status</th>
+            <th data-dafultsort="disabled">Options</th>
+        </thead>
+        <tbody>
+            {% for data in query %}
+                <tr>
+                    <td>{{ data.employee }}</td>
+                    <td>{{ data.start_date }}</td>
+                    <td>{{ data.end_date }}</td>
+                    <td>{{ data.get_type_of_leave_display }}</td>
+                    <td>
+                        {{ data.get_status_display }}
 
-</body>
-</html>
+                    </td>
+                    <td>
+                        {% if user.account.role == 30 %}
+                            <a class="btn btn-warning btn-sm" href="/performancereview/update?pk={{ data.pk }}" role="button">Update</a>
+                            <a class="btn btn-danger btn-sm" href="/diagnosis/update?pk={{ data.pk }}" role="button">Delete</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+
+        </tbody>
+    </table>
+    {% include "virtualclinic/admin/symptom_modal.html" %}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#datatable').DataTable();
+        });
+        function configureModal(pk, name) {
+            document.getElementById('symptom-modal-body').innerHTML = 'Are you sure you want to delete the symptom '.concat(name, '?');
+            document.getElementById('symptom-modal-hidden').value = pk;
+        }
+    </script>
+{% endblock %}
