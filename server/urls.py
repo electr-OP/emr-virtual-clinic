@@ -74,6 +74,7 @@ urlpatterns = [
     url(r'^leaverequest/list/$', views_leaverequest.list_view, name='leaverequest/list'),
     url(r'^leaverequest/create/$', views_leaverequest.create_view, name='leaverequest/create'),
     url(r'^leaverequest/update/$', views_leaverequest.update_view, name='leaverequest/update'),
+    url(r'^leaverequest/status/$', views_leaverequest.leave_status_update_view, name='leaverequest/status'),
 
     url(r'^performancereview/list/$', views_performance.list_view, name='performancereview/list'),
     url(r'^performancereview/create/$', views_performance.create_view, name='performancereview/create'),

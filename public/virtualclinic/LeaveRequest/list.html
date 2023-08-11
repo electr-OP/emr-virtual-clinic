@@ -31,8 +31,8 @@
                     <td>
                         {% if user.account.role == 30 %}
                             <a class="btn btn-warning btn-sm" href="/leaverequest/update?pk={{ data.pk }}" role="button">Update</a>
-                            <a class="btn btn-success btn-sm" href="/diagnosis/update?pk={{ data.pk }}" role="button">Approve</a>
-                            <a class="btn btn-danger btn-sm" href="/diagnosis/update?pk={{ data.pk }}" role="button">Reject</a>
+                            <a class="btn btn-success btn-sm" href="/leaverequest/status?pk={{ data.pk }}&status=approve" role="button">Approve</a>
+                            <a class="btn btn-danger btn-sm" href="/leaverequest/status?pk={{ data.pk }}&status=reject" role="button">Reject</a>
                         {% endif %}
                     </td>
                 </tr>

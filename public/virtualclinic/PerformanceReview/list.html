@@ -11,21 +11,21 @@
     <table id="datatable" class="table table-hover table-striped table-bordered">
         <thead>
             <th>employee</th>
-            <th>start_date</th>
-            <th>end_date Date</th>
-            <th>type_of_leave</th>
-            <th>status</th>
+            <th>reviewer</th>
+            <th>Review Date</th>
+            <th>Feedback</th>
+            <th>Rating</th>
             <th data-dafultsort="disabled">Options</th>
         </thead>
         <tbody>
             {% for data in query %}
                 <tr>
                     <td>{{ data.employee }}</td>
-                    <td>{{ data.start_date }}</td>
-                    <td>{{ data.end_date }}</td>
-                    <td>{{ data.get_type_of_leave_display }}</td>
+                    <td>{{ data.reviewer }}</td>
+                    <td>{{ data.review_date }}</td>
+                    <td>{{ data.feedback }}</td>
                     <td>
-                        {{ data.get_status_display }}
+                        {{ data.get_rating_display }}
 
                     </td>
                     <td>

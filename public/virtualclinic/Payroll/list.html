@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load app_filters %}
 {% block title %}Payroll{% endblock %}
-{% block sidebar_admin_leaverequest %}active{% endblock %}
+{% block sidebar_admin_payroll %}active{% endblock %}
 {% block body_header %}
     Payroll
     <br>
@@ -12,14 +12,14 @@
         <thead>
             <th>employee</th>
             <th>Salary</th>
-            <th>pay_type</th>
+            <th>Payment Type</th>
             <th data-dafultsort="disabled">Options</th>
         </thead>
         <tbody>
             {% for data in query %}
                 <tr>
                     <td>{{ data.employee }}</td>
-                    <td>{{ data.salary | currency }}</td>
+                    <td> ₦ {{ data.salary | format_money }}</td>
                     <td>{{ data.get_pay_type_display }}</td>
                     <td>
                         {% if user.account.role == 30 %}

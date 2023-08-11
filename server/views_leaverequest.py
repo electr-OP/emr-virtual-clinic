@@ -87,8 +87,6 @@ def update_view(request):
         })
     # Proceed with rest of view
     request.POST._mutable = True
-    # if request.user.account.role == Account.ACCOUNT_DOCTOR:
-    #     request.POST['doctor'] = request.user.account.pk
     if request.method == 'POST':
         form = LeaveRequestForm(request.POST)
         if form.is_valid():
@@ -103,3 +101,36 @@ def update_view(request):
     #     form.disable_field('doctor')
     template_data['form'] = form
     return render(request, 'virtualclinic/LeaveRequest/update.html', template_data)
+
+
+def leave_status_update_view(request):
+    # Authentication check
+    authentication_result = views.authentication_check(
+        request,
+        [Account.ACCOUNT_ADMIN]
+    )
+    if authentication_result is not None:
+        return authentication_result
+    template_data = views.parse_session(request)
+    try:
+    # if request.method == 'POST':
+        pk = request.GET['pk']
+        status = request.GET['status']
+        leaverequest = LeaveRequest.objects.get(pk=pk)
+        if status in ['approve', 'reject']:
+            leaverequest.status = status
+            leaverequest.save()
+            template_data['alert_success'] = "Leave Request has been updated"
+        elif status == 'delete':
+            leaverequest.delete()
+        else:
+            leaverequest.status = "pending"
+            leaverequest.save()
+
+    except Exception:
+        pass
+    # Get the template data from the session
+    # template_data = views.parse_session(request)
+    # Proceed with rest of the view
+    template_data['query'] = LeaveRequest.objects.all()
+    return render(request, 'virtualclinic/LeaveRequest/list.html', template_data)

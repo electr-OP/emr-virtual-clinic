@@ -38,7 +38,7 @@
 
             <tr>
                 <td>{{ data.id }}</td>
-                <td>{{ data.title }} </td>
+                <td>{{ data.title | striptags }} </td>
                 <td>{{ data.stemId }}</td>
                 <td>{{ data.score }}</td>
 {#                <td>{{ data.address }}</td>#}

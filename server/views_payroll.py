@@ -40,15 +40,19 @@ def create_view(request):
     request.POST._mutable = True
     request.POST.update(default)
     form = PayRollForm(request.POST, request.FILES)
-    if request.method == 'POST':
-        if form.is_valid():
-            leave_request = form.generate()
-            leave_request.save()
-            logger.log(Action.ACTION_MEDTEST, 'Payroll Created', request.user.account)
-            form = PayRollForm(default)  # clean form data
+    try:
+        if request.method == 'POST':
+            if form.is_valid():
+                leave_request = form.generate()
+                leave_request.save()
+                logger.log(Action.ACTION_MEDTEST, 'Payroll Created', request.user.account)
+                form = PayRollForm(default)  # clean form data
+                form._errors = {}
+                template_data['alert_success'] = "Successfully Added Payroll"
+        else:
             form._errors = {}
-            template_data['alert_success'] = "Successfully Added Payroll"
-    else:
+    except Exception:
+        template_data['alert_danger'] = "Duplicate Payroll"
         form._errors = {}
     template_data['form'] = form
     return render(request, 'virtualclinic/Payroll/create.html', template_data)

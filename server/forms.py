@@ -533,8 +533,6 @@ class AccountForm(BasicForm):
 
 
 class LeaveRequestForm(BasicForm):
-    # diagnosis_patient = forms.ModelChoiceField( label="Patient", queryset=Account.objects.exclude(role=Account.ACCOUNT_PATIENT))
-    # setup_field(diagnosis_patient)
     LEAVE_CHOICES = (
         (1, "Annual Leave/Vacation Leave"),
         (2, "Sick Leave"),
@@ -552,8 +550,8 @@ class LeaveRequestForm(BasicForm):
     )
     STATUS = (
         ('pending', 'Pending'),
-        ('approved', 'Approved'),
-        ('rejected', 'Rejected')
+        ('approve', 'Approved'),
+        ('reject', 'Rejected')
     )
 
     employee = forms.ModelChoiceField(required=True,label="Employee", queryset=Account.objects.exclude(role=Account.ACCOUNT_PATIENT))
@@ -575,7 +573,6 @@ class LeaveRequestForm(BasicForm):
         medtest.end_date = self.cleaned_data['end_date']
         medtest.reason = self.cleaned_data['reason']
         medtest.type_of_leave = self.cleaned_data['type_of_leave']
-        # medtest.status = self.cleaned_data['status']
 
     def generate(self):
         return LeaveRequest(
@@ -584,7 +581,6 @@ class LeaveRequestForm(BasicForm):
             end_date = self.cleaned_data['end_date'],
             reason = self.cleaned_data['reason'],
             type_of_leave = self.cleaned_data['type_of_leave'],
-            # status = self.cleaned_data['status'],
         )
 
 

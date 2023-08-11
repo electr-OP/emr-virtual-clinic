@@ -470,7 +470,7 @@ class LeaveRequest(models.Model):
     end_date = models.DateField()
     reason = models.TextField()
     type_of_leave = models.PositiveIntegerField(default=5, choices=LEAVE_CHOICES)
-    status = models.CharField(max_length=20, default='pending', choices=[('pending', 'Pending'), ('approved', 'Approved'), ('rejected', 'Rejected')])
+    status = models.CharField(max_length=20, default='pending', choices=[('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')])
 
     def get_populated_fields(self):
         """To collect form data"""
@@ -500,7 +500,7 @@ class Payroll(models.Model):
         (7, "Contract/Project-Based"),
         (8, "Annual"),
     ]
-    employee = models.ForeignKey(Account, on_delete=models.CASCADE)
+    employee = models.OneToOneField(Account, on_delete=models.CASCADE)
     salary = models.DecimalField(max_digits=10, decimal_places=2)
     pay_type = models.PositiveIntegerField(default=1, choices=PAY_CHOICES)
 
@@ -508,8 +508,8 @@ class Payroll(models.Model):
         """To collect form data"""
         fields = {
             'employee': self.employee,
-            'salary': self.start_date,
-            'pay_type': self.end_date,
+            'salary': self.salary,
+            'pay_type': self.pay_type,
         }
         return fields
 
@@ -525,12 +525,13 @@ class PerformanceReview(models.Model):
         """To collect form data"""
         fields = {
             'employee': self.employee,
-            'reviewer': self.start_date,
-            'review_date': self.end_date,
-            'feedback': self.end_date,
-            'rating': self.end_date,
+            'reviewer': self.reviewer,
+            'review_date': self.review_date,
+            'feedback': self.feedback,
+            'rating': self.rating,
         }
         return fields
+
 # class Attendance(models.Model):
 #     employee = models.ForeignKey(Account, on_delete=models.CASCADE)
 #     date = models.DateField()
