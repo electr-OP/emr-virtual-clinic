@@ -474,7 +474,7 @@ class DiagnosisForm(BasicForm):
     setup_field(diagnosis_patient)
     condition = forms.CharField(max_length=100)
     setup_field(condition,"Enter condition here")
-    notes = forms.CharField(max_length=100)
+    notes = forms.CharField(widget=forms.Textarea)
     setup_field(notes, "Enter Notes here")
 
     def assign(self,medtest):
@@ -656,3 +656,44 @@ class PerformanceReviewForm(BasicForm):
             feedback = self.cleaned_data['feedback'],
             rating = self.cleaned_data['rating'],
         )
+
+
+class PatientRegistrationForm(BasicForm):
+    # ACCOUNT_UNKNOWN = 0
+    ACCOUNT_PATIENT = 10
+    ACCOUNT_TYPES = (
+        # (ACCOUNT_UNKNOWN, "Unknown"),
+        (ACCOUNT_PATIENT, "Patient"),
+    )
+    firstname = forms.CharField(label='First Name', max_length=50)
+    setup_field(firstname,'Enter first name here')
+    lastname = forms.CharField(label='Last Name', max_length=50)
+    setup_field(lastname, 'Enter last name here')
+    email = forms.EmailField(max_length=50, validators=[validate_username_available])
+    setup_field(email, 'Enter email here')
+    password_first = forms.CharField(label='Password', min_length=1, max_length=50, widget=forms.PasswordInput())
+    setup_field(password_first, "Enter password here")
+    password_second = forms.CharField(label='', min_length=1, max_length=50, widget=forms.PasswordInput())
+    setup_field(password_second, "Enter password again")
+    employee = forms.ChoiceField(label="User Type",required=False, choices=ACCOUNT_TYPES)
+    setup_field(employee)
+    # speciality = forms.ModelChoiceField(label="Speciality", required=False, queryset=Speciality.objects.all())
+    # setup_field(speciality)
+
+    def clean(self):
+        """
+        This is to make sure both passwords fields have the same values in them. If they don't mark
+        them as errous.
+        """
+        cleaned_data = super(PatientRegistrationForm,self).clean()
+        password_first = cleaned_data.get('password_first')
+        password_second = cleaned_data.get('password_second')
+        employee = cleaned_data.get('employee')
+        # speciality = cleaned_data.get('speciality')
+        if password_first and password_second and password_first!=password_second:
+            self.mark_error('password_second', 'Passwords do not match')
+        # if int(employee)==20 and speciality is None:
+        #     self.mark_error('speciality', 'Doctor must have a speciality')
+        # if int(employee)!=20 and speciality is not None:
+        #     self.mark_error('speciality', 'Only doctor can have a speciality')
+        return cleaned_data

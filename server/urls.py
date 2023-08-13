@@ -69,6 +69,7 @@ urlpatterns = [
     url(r'^icd/search/', views_icd.get_entity_search, name='icd/search'),
     url(r'^icd/search_view/', views_icd.search_view, name='icd/search_view'),
     url(r'^icd/view_entity/$', views_icd.view_entity, name='icd/view_entity'),
+    url(r'^icd/create_icd_diagnosis/$', views_icd.create_icd_diagnosis_view, name='icd/create_icd_diagnosis'),
 
 
     url(r'^leaverequest/list/$', views_leaverequest.list_view, name='leaverequest/list'),
@@ -95,6 +96,7 @@ urlpatterns = [
     url(r'^medicalinfo/list/$', views_medicalinfo.list_view, name='medicalinfo/list'),
     url(r'^medicalinfo/update/$', views_medicalinfo.update_view, name='medicalinfo/update'),
     url(r'^medicalinfo/patient/$', views_medicalinfo.update_view, name='medicalinfo/patient'),
+    url(r'^medicalinfo/createpatient/$', views_medicalinfo.createpatient_view, name='medicalinfo/createpatient'),
 
     url(r'^pdf/$', GeneratePdf.as_view()),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

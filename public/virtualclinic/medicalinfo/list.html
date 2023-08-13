@@ -8,6 +8,8 @@
 {% endblock %}
 {% block body_header %}
     View Patient's Medical Information
+    <br>
+    <a class="btn btn-success btn-sm" href="/medicalinfo/createpatient" role="button">Add Patient</a>
 {% endblock %}
 {% block body %}
     <table id="datatable" class="table table-hover table-striped table-bordered">
@@ -24,7 +26,7 @@
                     <td>{{ medicalinfo.bloodType }}</td>
                     <td>{{ medicalinfo.allergy }}</td>
                     <td>
-                        {% if user.account.role == 20 %}
+                        {% if user.account.role == 20 or user.account.role == 60%}
                             <a class="btn btn-warning btn-sm" href="/medicalinfo/update/?pk={{ medicalinfo.pk }}" role="button">Update</a>
                         {% endif %}
                     </td>

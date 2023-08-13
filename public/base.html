@@ -44,7 +44,7 @@
                                 <li><a href="/profile/update/">Update Profile<i class="pull-right fa fa-pencil"></i></a></li>
                                 <li><a href="/profile/password">Change Password<i class="pull-right fa fa-cog"></i></a></li>
                                 <li class="divider"></li>
-                                <li><a href="/logout">Logout<i class="pull-right fa fa-sign-out"></i></i></a></li>
+                                <li><a href="/logout">Logout<i class="pull-right fa fa-sign-out"></i></a></li>
                             </ul>
                         </li>
                     {% else %}
@@ -78,7 +78,7 @@
                             <li class="{% block sidebar_message %}{% endblock %}"><a href="/message/list/">Messages<i class="pull-right fa fa-envelope"></i></a></li>
                             <li class="{% block sidebar_icd %}{% endblock %}"><a href="/icd/search_view/">ICD<i class="pull-right fa fa-medkit"></i></a></li>
                         {% endif %}
-                        {% if user.account.role == 10 or user.account.role == 20 %}
+                        {% if user.account.role == 10 or user.account.role == 20 or user.account.role == 60%}
                             <li class="{% block sidebar_appointment %}{% endblock %}"><a href="/appointment/list/">Appointments<i class="pull-right fa fa-calendar"></i></a></li>
                             <li class="{% block sidebar_medicalinfo %}{% endblock %}"><a href="{% if user.account.role == 10 %}/medicalinfo/patient/{% else %}/medicalinfo/list/{% endif %}">Medical Info<i class="pull-right fa fa-heartbeat"></i></a></li>
                         {% endif %}
@@ -97,10 +97,12 @@
                             <li class="{% block sidebar_admin_statistics %}{% endblock %}"><a href="/admin/statistics/">View Statistics<i class="pull-right fa fa-bar-chart"></i></a></li>
                             <li class="{% block sidebar_admin_import %}{% endblock %}"><a href="/admin/import/">CSV Management<i class="pull-right fa fa-upload"></i></a></li>
                             <li class="{% block sidebar_admin_employee %}{% endblock %}"><a href="/employee/list/">Employee<i class="pull-right fa fa-users"></i></a></li>
-                            <li class="{% block sidebar_admin_leaverequest %}{% endblock %}"><a href="/leaverequest/list/">LeaveRequest<i class="pull-right fa fa-plane"></i></a></li>
                             <li class="{% block sidebar_admin_payroll %}{% endblock %}"><a href="/payroll/list/">Payroll<i class="pull-right fa fa-money"></i></a></li>
                             <li class="{% block sidebar_admin_performancereview %}{% endblock %}"><a href="/performancereview/list/">PerformanceReview<i class="pull-right fa fa-gears"></i></a></li>
 {#                            <li class="{% block sidebar_admin_Attendance %}{% endblock %}"><a href="/admin/import/">Attendance<i class="pull-right fa fa-clock-o"></i></a></li>#}
+                        {% endif %}
+                        {% if user.account.role != 10 %}
+                         <li class="{% block sidebar_admin_leaverequest %}{% endblock %}"><a href="/leaverequest/list/">LeaveRequest<i class="pull-right fa fa-plane"></i></a></li>
                         {% endif %}
                     </ul>
                 </div>

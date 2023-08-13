@@ -10,6 +10,11 @@ from server import views
 
 
 def list_view(request):
+    # authentication_result = views.authentication_check(
+    #     request,
+    #     [Account.ACCOUNT_DOCTOR, Account.ACCOUNT_LAB, Account.ACCOUNT_CHEMIST, Account.ACCOUNT_NURSE, ]
+    # )
+
     # Authentication check
     authentication_result = views.authentication_check(
         request,

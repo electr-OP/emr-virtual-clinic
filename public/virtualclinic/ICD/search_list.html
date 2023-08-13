@@ -46,6 +46,8 @@
                     {% if user.account.role == 30 %}
                         <a class="btn btn-warning btn-sm" href="/icd/view_entity?pk={{ data.id }}"
                            role="button">View</a>
+                        <a class="btn btn-warning btn-sm" href="/icd/create_icd_diagnosis?pk={{ data.id }}"
+                           role="button">Diagnosis</a>
                     {% endif %}
                 </td>
             </tr>
@@ -64,58 +66,22 @@
             document.getElementById('symptom-modal-body').innerHTML = 'Are you sure you want to delete the symptom '.concat(name, '?');
             document.getElementById('symptom-modal-hidden').value = pk;
         }
-        {##}
-        {#function getCookie(name) {#}
-        {#    let cookieValue = null;#}
-        {#    if (document.cookie && document.cookie !== '') {#}
-        {#        const cookies = document.cookie.split(';');#}
-        {#        for (let i = 0; i < cookies.length; i++) {#}
-        {#            const cookie = cookies[i].trim();#}
-        {#            if (cookie.substring(0, name.length + 1) === (name + '=')) {#}
-        {#                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));#}
-        {#                break;#}
-        {#            }#}
-        {#        }#}
-        {#    }#}
-        {#    return cookieValue;#}
-        {##}
-        {##}
-        {#document.addEventListener("DOMContentLoaded", function () {#}
-        {#    const searchButton = document.getElementById("searchButton");#}
-        {#    const searchInput = document.getElementById("searchInput");#}
-        {#    const searchResults = document.getElementById("searchResults");#}
-        {##}
-        {#    searchButton.addEventListener("click", function () {#}
-        {#        const query = searchInput.value;#}
-        {#        const csrftoken = getCookie('csrftoken');#}
-        {##}
-        {#        // Create the payload object#}
-        {#        const payload = {#}
-        {#            q: query,#}
-        {#            otherParam: "value"#}
-        {#            // Add more payload parameters as needed#}
-        {#        };#}
-        {##}
-        {#        // Replace with your API endpoint URL#}
-        {#        const apiUrl = "http://127.0.0.1:8000/icd/search/";#}
-        {##}
-        {#        fetch(apiUrl, {#}
-        {#            method: "GET",#}
-        {#            headers: {#}
-        {#                "Content-Type": "application/json",#}
-        {#                'X-CSRFToken': csrftoken,#}
-        {#                // Add any additional headers as needed#}
-        {#            },#}
-        {#            // Convert the payload to a JSON string and include it in the request body#}
-        {#            body: JSON.stringify(payload),#}
-        {#        })#}
-        {#            .then(response => response.json())#}
-        {#            .then(data => console.log(data))#}
-        {#            .catch(error => console.error("Error:", error));#}
-        {#    });#}
-        {##}
-        {##}
 
+        let typingTimer;
+        const doneTypingInterval = 1000;  // 1 second
+
+        const selectField = document.getElementById("dynamic-select");
+
+        selectField.addEventListener("input", function() {
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(getData, doneTypingInterval);
+        });
+
+        function getData() {
+            const selectedValue = selectField.value;
+            console.log("Selected value:", selectedValue);
+            // Call your function or perform actions with the selected value here
+        }
 
     </script>
 {% endblock %}
