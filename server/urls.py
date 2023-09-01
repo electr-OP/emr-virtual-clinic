@@ -2,7 +2,7 @@ from django.conf.urls import url
 from django.conf.urls.static import static
 from django.conf import settings
 
-from server import views
+from server import views, views_payroll
 from server import views_home
 from server import views_profile
 from server import views_prescription
@@ -13,6 +13,7 @@ from server import views_admin
 from server import views_message
 from server import views_api
 from .views import GeneratePdf
+from  server import diagnosis, views_employees, views_icd, views_leaverequest, views_performance
 
 app_name = 'server'
 
@@ -61,6 +62,33 @@ urlpatterns = [
     url(r'^medtest/display/$', views_medtest.display_view, name='medtest/display'),
     url(r'^medtest/update/$', views_medtest.update_view, name='medtest/update'),
 
+    url(r'^diagnosis/list/$', diagnosis.list_view_diagnosis, name='diagnosis/list'),
+    url(r'^diagnosis/create/$', diagnosis.create_view, name='diagnosis/create'),
+    url(r'^diagnosis/update/$', diagnosis.update_view, name='diagnosis/update'),
+
+    url(r'^icd/search/', views_icd.get_entity_search, name='icd/search'),
+    url(r'^icd/search_view/', views_icd.search_view, name='icd/search_view'),
+    url(r'^icd/view_entity/$', views_icd.view_entity, name='icd/view_entity'),
+    url(r'^icd/create_icd_diagnosis/$', views_icd.create_icd_diagnosis_view, name='icd/create_icd_diagnosis'),
+
+
+    url(r'^leaverequest/list/$', views_leaverequest.list_view, name='leaverequest/list'),
+    url(r'^leaverequest/create/$', views_leaverequest.create_view, name='leaverequest/create'),
+    url(r'^leaverequest/update/$', views_leaverequest.update_view, name='leaverequest/update'),
+    url(r'^leaverequest/status/$', views_leaverequest.leave_status_update_view, name='leaverequest/status'),
+
+    url(r'^performancereview/list/$', views_performance.list_view, name='performancereview/list'),
+    url(r'^performancereview/create/$', views_performance.create_view, name='performancereview/create'),
+    url(r'^performancereview/update/$', views_performance.update_view, name='performancereview/update'),
+
+    url(r'^payroll/list/$', views_payroll.list_view, name='payroll/list'),
+    url(r'^payroll/create/$', views_payroll.create_view, name='payroll/create'),
+    url(r'^payroll/update/$', views_payroll.update_view, name='payroll/update'),
+
+    url(r'^employee/list/$', views_employees.list_view, name='employee/list'),
+    url(r'^employee/create/$', views_employees.create_view, name='employee/create'),
+    url(r'^employee/update/$', views_employees.update_view, name='employee/update'),
+
     url(r'^prescription/create/$', views_prescription.create_view, name='prescription/create'),
     url(r'^prescription/list/$', views_prescription.list_view, name='prescription/list'),
     url(r'^prescription/update/$', views_prescription.update_view, name='prescription/update'),
@@ -68,6 +96,7 @@ urlpatterns = [
     url(r'^medicalinfo/list/$', views_medicalinfo.list_view, name='medicalinfo/list'),
     url(r'^medicalinfo/update/$', views_medicalinfo.update_view, name='medicalinfo/update'),
     url(r'^medicalinfo/patient/$', views_medicalinfo.update_view, name='medicalinfo/patient'),
+    url(r'^medicalinfo/createpatient/$', views_medicalinfo.createpatient_view, name='medicalinfo/createpatient'),
 
     url(r'^pdf/$', GeneratePdf.as_view()),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.db.models import Q
-
+from django.utils import timezone
 from server.forms import AppointmentForm
 from server.models import Account, Appointment, Action
 from server import views
@@ -28,6 +28,7 @@ def list_view(request):
         template_data['query'] = Appointment.objects.filter(patient=request.user.account)
     else:
         template_data['query'] = Appointment.objects.all()
+    template_data['current_datetime'] = timezone.now()
     return render(request, 'virtualclinic/appointment/list.html', template_data)
 
 
@@ -60,6 +61,7 @@ def start_meeting(request):
         'meeting_title': 'Test Meeting'
     }
     return render(request, 'virtualclinic/appointment/meeting.html', template_data)
+
 
 def update_view(request):
     # Authentication check

@@ -8,7 +8,7 @@ from django.shortcuts import render,redirect
 from django.http import HttpResponseRedirect, HttpResponse
 from django.db.utils import IntegrityError
 
-from server.forms import SpecialityForm, SymptomForm, EmployeeRegistrationForm, ImportForm, ExportForm, HospitalForm, StatisticsForm
+from server.forms import SpecialityForm, SymptomForm, EmployeeRegistrationForm, ImportForm, ExportForm, HospitalForm, StatisticsForm, PatientRegistrationForm
 from server.models import Speciality, Account, Action, Hospital, Location, Statistics, Symptom, Profile, Appointment, Message, Prescription, MedicalInfo, MedicalTest
 from server import logger
 from server import views

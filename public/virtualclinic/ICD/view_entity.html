@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load app_filters %}
+{% block title %} ICD Entity{% endblock %}
+{% block sidebar_icd %}active{% endblock %}
+{% block body_header %}
+    ICD Entity
+    {#    <br>#}
+    {#    <a class="btn btn-success btn-sm" href="/employee/create" role="button">Add Employee</a>#}
+{% endblock %}
+{% block body %}
+    {#    <h1>#}
+    <h3 class="text-danger">Title</h3>
+    <h1>
+        {{ query.title }}
+    </h1>
+    <br/>
+    <h3 class="text-danger">Definition</h3>
+    <h2>
+        {{ query.definition }}
+    </h2>
+    <br/>
+    {% if query.longdefinition %}
+        <h3 class="text-danger">Long Definition</h3>
+        <h2>
+            {{ query.longdefinition }}
+        </h2>
+    {% endif %}
+    {#    </h1>#}
+{% endblock %}

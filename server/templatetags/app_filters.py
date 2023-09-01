@@ -63,3 +63,8 @@ def getStatisticAction(key):
     :return: The string representation of the name for statistic
     """
     return Statistics.to_statistic(key)
+
+@register.filter(name='format_money')
+def format_money(key):
+    formatted_number = format(key, ",.2f")
+    return formatted_number

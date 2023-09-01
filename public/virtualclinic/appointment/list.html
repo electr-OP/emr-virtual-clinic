@@ -38,6 +38,7 @@
                         <th>Status</th>
                         <th data-defaultsort='disabled'>Options</th>
                         <th>Type</th>
+                        <th>Meeting Link</th>
                     </thead>
                     <tbody>
                         {% for appointment in query %}
@@ -72,7 +73,20 @@
                                         {% endif %}
                                     {% endif %}
                                 </td>
-                                <td>{{ appointment.appointment_type }}</td>
+                                <td>
+                                    {{ appointment.appointment_type }}
+                                </td>
+                                <td>
+                                    {% if appointment.status == "Active" and appointment.endTime > current_datetime and appointment.startTime < current_datetime %}
+                                        <a class="btn center-block btn-success btn-sm" href="/appointment/start/" role="button">Join</a>
+                                    {% elif appointment.status == "Active" and appointment.endTime > current_datetime and appointment.startTime > current_datetime %}
+                                        <a class="btn center-block btn-warning btn-sm disabled" role="button">Waiting...</a>
+                                        {% elif appointment.appointment_type == 'Offline' %}
+{#                                        <a class="btn center-block btn-warning btn-sm disabled" role="button"></a>#}
+                                    {% else %}
+                                        <a class="btn center-block btn-danger btn-sm disabled" role="button">Expired</a>
+                                    {% endif %}
+                                </td>
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -82,6 +96,7 @@
     </div>
     {% include "virtualclinic/appointment/appointment_modal.html" %}
     <script type="text/javascript">
+
         var virtualclinic = {};
         virtualclinic.active = [];
         virtualclinic.cancelled = [];

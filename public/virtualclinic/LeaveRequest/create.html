@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load app_filters %}
+{% block title %}
+    Add Leave Request
+{% endblock %}
+{% block sidebar_admin_leaverequest %}
+    active
+{% endblock %}
+{% block body_header %}
+    Add Leave Request
+{% endblock %}
+{% block body %}
+    <p class="lead">Fill out this Leave Request form and click '{{ form_button }}' when finished.</p>
+    {% include "singleform.html" %}
+{% endblock %}

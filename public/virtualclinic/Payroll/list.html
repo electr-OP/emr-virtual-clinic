@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load app_filters %}
+{% block title %}Payroll{% endblock %}
+{% block sidebar_admin_payroll %}active{% endblock %}
+{% block body_header %}
+    Payroll
+    <br>
+    <a class="btn btn-success btn-sm" href="/payroll/create" role="button">Add Leave Request</a>
+{% endblock %}
+{% block body %}
+    <table id="datatable" class="table table-hover table-striped table-bordered">
+        <thead>
+            <th>employee</th>
+            <th>Salary</th>
+            <th>Payment Type</th>
+            <th data-dafultsort="disabled">Options</th>
+        </thead>
+        <tbody>
+            {% for data in query %}
+                <tr>
+                    <td>{{ data.employee }}</td>
+                    <td> ₦ {{ data.salary | format_money }}</td>
+                    <td>{{ data.get_pay_type_display }}</td>
+                    <td>
+                        {% if user.account.role == 30 %}
+                            <a class="btn btn-warning btn-sm" href="/payroll/update?pk={{ data.pk }}" role="button">Update</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+
+        </tbody>
+    </table>
+    {% include "virtualclinic/admin/symptom_modal.html" %}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#datatable').DataTable();
+        });
+        function configureModal(pk, name) {
+            document.getElementById('symptom-modal-body').innerHTML = 'Are you sure you want to delete the symptom '.concat(name, '?');
+            document.getElementById('symptom-modal-hidden').value = pk;
+        }
+    </script>
+{% endblock %}

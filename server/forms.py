@@ -4,7 +4,8 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 
-from server.models import Account, Profile, Hospital, MedicalInfo, MedicalTest, IND_STATES, Appointment, Message, Speciality, APPOINTMENT_TYPE, Symptom
+from server.models import Account, Profile, Hospital, MedicalInfo, MedicalTest, IND_STATES, Appointment, Message, \
+    Speciality, APPOINTMENT_TYPE, Symptom, Diagnosis, LeaveRequest, Payroll, PerformanceReview
 
 
 def validate_username_available(username):
@@ -466,3 +467,233 @@ class StatisticsForm(BasicForm):
     def assign(self,statistics):
         statistics.startTime = self.cleaned_data['startDate']
         statistics.endTime = self.cleaned_data['endDate']
+
+
+class DiagnosisForm(BasicForm):
+    diagnosis_patient = forms.ModelChoiceField( label="Patient", queryset=Account.objects.filter(role=Account.ACCOUNT_PATIENT))
+    setup_field(diagnosis_patient)
+    condition = forms.CharField(max_length=100)
+    setup_field(condition,"Enter condition here")
+    notes = forms.CharField(widget=forms.Textarea)
+    setup_field(notes, "Enter Notes here")
+
+    def assign(self,medtest):
+        medtest.diagnosis_patient = self.cleaned_data['diagnosis_patient']
+        medtest.condition = self.cleaned_data['condition']
+        medtest.notes = self.cleaned_data['notes']
+
+    def generate(self):
+        return Diagnosis(
+            diagnosis_patient = self.cleaned_data['diagnosis_patient'],
+            condition = self.cleaned_data['condition'],
+            notes = self.cleaned_data['notes'],
+        )
+
+
+class AccountForm(BasicForm):
+    # diagnosis_patient = forms.ModelChoiceField( label="Patient", queryset=Account.objects.exclude(role=Account.ACCOUNT_PATIENT))
+    # setup_field(diagnosis_patient)
+    CHOICES = (
+        (1, 'Active'), (2, 'Pending'), (3, 'Deactivated')
+    )
+    address = forms.CharField(max_length=100, required=False)
+    setup_field(address,"Enter condition here")
+    employment_status = forms.ChoiceField(required=False, choices=CHOICES)
+    setup_field(employment_status, "Select Employment Status here")
+    marital_status = forms.CharField(max_length=100, required=False)
+    setup_field(marital_status,"Enter marital status here")
+    emergency_contact_name = forms.CharField(max_length=100, required=False)
+    setup_field(emergency_contact_name, "Enter emergency contact name here")
+    emergency_contact_phone = forms.CharField(max_length=100, required=False)
+    setup_field(emergency_contact_phone, "Enter emergency contact phone here")
+    emergency_contact_email = forms.CharField(max_length=100, required=False)
+    setup_field(emergency_contact_email,"Enter emergency contact email here")
+    emergency_contact_address = forms.CharField(max_length=100, required=False)
+    setup_field(emergency_contact_address, "Enter emergency contact address here")
+
+    def assign(self,medtest):
+        medtest.address = self.cleaned_data['address']
+        medtest.employment_status = self.cleaned_data['employment_status']
+        medtest.marital_status = self.cleaned_data['marital_status']
+        medtest.emergency_contact_name = self.cleaned_data['emergency_contact_name']
+        medtest.emergency_contact_phone = self.cleaned_data['emergency_contact_phone']
+        medtest.emergency_contact_email = self.cleaned_data['emergency_contact_email']
+        medtest.emergency_contact_address = self.cleaned_data['emergency_contact_address']
+
+    def generate(self):
+        return Account(
+            address = self.cleaned_data['address'],
+            employment_status = self.cleaned_data['employment_status'],
+            marital_status = self.cleaned_data['marital_status'],
+            emergency_contact_name = self.cleaned_data['emergency_contact_name'],
+            emergency_contact_phone = self.cleaned_data['emergency_contact_phone'],
+            emergency_contact_email = self.cleaned_data['emergency_contact_email'],
+            emergency_contact_address = self.cleaned_data['emergency_contact_address']
+        )
+
+
+class LeaveRequestForm(BasicForm):
+    LEAVE_CHOICES = (
+        (1, "Annual Leave/Vacation Leave"),
+        (2, "Sick Leave"),
+        (3, "Maternity Leave"),
+        (4, "Paternity Leave"),
+        (5, "Parental Leave"),
+        (6, "Bereavement Leave"),
+        (7, "Personal Leave"),
+        (8, "Compensatory Leave"),
+        (9, "Public Holidays"),
+        (10, "Special Leave"),
+        (11, "Sabbatical Leave"),
+        (12, "Unpaid Leave"),
+        (13, "Family and Medical Leave Act (FMLA) Leave")
+    )
+    STATUS = (
+        ('pending', 'Pending'),
+        ('approve', 'Approved'),
+        ('reject', 'Rejected')
+    )
+
+    employee = forms.ModelChoiceField(required=True,label="Employee", queryset=Account.objects.exclude(role=Account.ACCOUNT_PATIENT))
+    setup_field(employee,"Choose Employee")
+    start_date = forms.DateField(required=True)
+    setup_field(start_date)
+    end_date = forms.DateField(required=True)
+    setup_field(end_date,"Enter marital status here")
+    reason = forms.CharField(required=True)
+    setup_field(reason, "Enter Reason For Leave")
+    type_of_leave = forms.ChoiceField(choices=LEAVE_CHOICES, required=True)
+    setup_field(type_of_leave, "Enter emergency contact phone here")
+    # status = forms.ChoiceField(choices=STATUS, disabled=True, required=False)
+    # setup_field(status)
+
+    def assign(self,medtest):
+        medtest.employee = self.cleaned_data['employee']
+        medtest.start_date = self.cleaned_data['start_date']
+        medtest.end_date = self.cleaned_data['end_date']
+        medtest.reason = self.cleaned_data['reason']
+        medtest.type_of_leave = self.cleaned_data['type_of_leave']
+
+    def generate(self):
+        return LeaveRequest(
+            employee = self.cleaned_data['employee'],
+            start_date = self.cleaned_data['start_date'],
+            end_date = self.cleaned_data['end_date'],
+            reason = self.cleaned_data['reason'],
+            type_of_leave = self.cleaned_data['type_of_leave'],
+        )
+
+
+class PayRollForm(BasicForm):
+    # diagnosis_patient = forms.ModelChoiceField( label="Patient", queryset=Account.objects.exclude(role=Account.ACCOUNT_PATIENT))
+    # setup_field(diagnosis_patient)
+    PAY_CHOICES = [
+        (1, "Monthly"),
+        (2, "Bi-Weekly"),
+        (3, "Weekly"),
+        (4, "Semi-Monthly"),
+        (5, "Hourly Wage"),
+        (6, "Commission"),
+        (7, "Contract/Project-Based"),
+        (8, "Annual"),
+    ]
+
+    employee = forms.ModelChoiceField(required=True,label="Employee", queryset=Account.objects.exclude(role=Account.ACCOUNT_PATIENT))
+    setup_field(employee,"Choose Employee")
+    salary = forms.DecimalField(required=True)
+    setup_field(salary)
+    pay_type = forms.ChoiceField(required=True, choices=PAY_CHOICES)
+    setup_field(pay_type,"Enter marital status here")
+
+    def assign(self,medtest):
+        medtest.employee = self.cleaned_data['employee']
+        medtest.salary = self.cleaned_data['salary']
+        medtest.pay_type = self.cleaned_data['pay_type']
+        # medtest.status = self.cleaned_data['status']
+
+    def generate(self):
+        return Payroll(
+            employee = self.cleaned_data['employee'],
+            salary = self.cleaned_data['salary'],
+            pay_type = self.cleaned_data['pay_type'],
+        )
+
+
+class PerformanceReviewForm(BasicForm):
+    RATING_CHOICES = (
+        (1, 'Poor'),
+        (2, 'Average'),
+        (3, 'Good'),
+        (4, 'Excellent'),
+        (5, 'Outstanding')
+    )
+
+    employee = forms.ModelChoiceField(required=True,label="Employee", queryset=Account.objects.exclude(role=Account.ACCOUNT_PATIENT))
+    setup_field(employee,"Choose Employee")
+    reviewer = forms.ModelChoiceField(required=True, label="Reviewer", queryset=Account.objects.filter(role=Account.ACCOUNT_ADMIN))
+    setup_field(reviewer)
+    review_date = forms.DateField(required=True)
+    setup_field(review_date,"Enter marital status here")
+    feedback = forms.CharField(required=True)
+    setup_field(feedback, "Enter Reason For Leave")
+    rating = forms.ChoiceField(choices=RATING_CHOICES, required=True)
+    setup_field(rating, "Enter emergency contact phone here")
+    # status = forms.ChoiceField(choices=STATUS, disabled=True, required=False)
+    # setup_field(status)
+
+    def assign(self,medtest):
+        medtest.employee = self.cleaned_data['employee']
+        medtest.reviewer = self.cleaned_data['reviewer']
+        medtest.review_date = self.cleaned_data['review_date']
+        medtest.feedback = self.cleaned_data['feedback']
+        medtest.rating = self.cleaned_data['rating']
+
+    def generate(self):
+        return PerformanceReview(
+            employee = self.cleaned_data['employee'],
+            reviewer = self.cleaned_data['reviewer'],
+            review_date = self.cleaned_data['review_date'],
+            feedback = self.cleaned_data['feedback'],
+            rating = self.cleaned_data['rating'],
+        )
+
+
+class PatientRegistrationForm(BasicForm):
+    # ACCOUNT_UNKNOWN = 0
+    ACCOUNT_PATIENT = 10
+    ACCOUNT_TYPES = (
+        # (ACCOUNT_UNKNOWN, "Unknown"),
+        (ACCOUNT_PATIENT, "Patient"),
+    )
+    firstname = forms.CharField(label='First Name', max_length=50)
+    setup_field(firstname,'Enter first name here')
+    lastname = forms.CharField(label='Last Name', max_length=50)
+    setup_field(lastname, 'Enter last name here')
+    email = forms.EmailField(max_length=50, validators=[validate_username_available])
+    setup_field(email, 'Enter email here')
+    password_first = forms.CharField(label='Password', min_length=1, max_length=50, widget=forms.PasswordInput())
+    setup_field(password_first, "Enter password here")
+    password_second = forms.CharField(label='', min_length=1, max_length=50, widget=forms.PasswordInput())
+    setup_field(password_second, "Enter password again")
+    employee = forms.ChoiceField(label="User Type",required=False, choices=ACCOUNT_TYPES)
+    setup_field(employee)
+    # speciality = forms.ModelChoiceField(label="Speciality", required=False, queryset=Speciality.objects.all())
+    # setup_field(speciality)
+
+    def clean(self):
+        """
+        This is to make sure both passwords fields have the same values in them. If they don't mark
+        them as errous.
+        """
+        cleaned_data = super(PatientRegistrationForm,self).clean()
+        password_first = cleaned_data.get('password_first')
+        password_second = cleaned_data.get('password_second')
+        employee = cleaned_data.get('employee')
+        # speciality = cleaned_data.get('speciality')
+        if password_first and password_second and password_first!=password_second:
+            self.mark_error('password_second', 'Passwords do not match')
+        # if int(employee)==20 and speciality is None:
+        #     self.mark_error('speciality', 'Doctor must have a speciality')
+        # if int(employee)!=20 and speciality is not None:
+        #     self.mark_error('speciality', 'Only doctor can have a speciality')
+        return cleaned_data
